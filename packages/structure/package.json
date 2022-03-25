@@ -1,4 +1,12 @@
 {
   "name": "@tools/structure",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "scripts": {
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "c8": "^7.11.0",
+    "vitest": "^0.7.11"
+  }
 }

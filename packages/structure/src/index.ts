@@ -1,2 +1,2 @@
-export * from "./Queue";
+export * from "./queue/Queue";
 export * from "./Stack";

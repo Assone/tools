@@ -1,23 +1,25 @@
 interface QueueProperty<T> {
   top: T | undefined;
-  size: number;
+  length: number;
   isEmpty: boolean;
 }
 
 interface QueueMethods<T> {
-  add(value: T): void
-  remove(): T | undefined
-  clear(): void
+  add(value: T): void;
+  remove(): T | undefined;
+  clear(): void;
 }
 
-export default class Queue<T = any> implements QueueProperty<T>, QueueMethods<T> {
+export default class Queue<T = any>
+  implements QueueProperty<T>, QueueMethods<T>
+{
   constructor(private data: T[] = []) {}
 
   get top() {
-    return this.data[this.data.length - 1];
+    return this.data[0];
   }
 
-  get size() {
+  get length() {
     return this.data.length;
   }
 
