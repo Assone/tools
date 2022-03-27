@@ -1,18 +1,6 @@
+import { LinkedListMethods } from "./LinkedList.interface";
 import LinkedListNode from "./LinkedListNode";
 
-interface LinkedListMethods<T> {
-  find(value: T): LinkedListNode<T> | null;
-  findByIndex(index: number): LinkedListNode<T> | null;
-  append(value: T): LinkedListNode<T>;
-  insert(value: T, index: number): LinkedListNode<T>;
-  insert(value: T, node: LinkedListNode<T>): LinkedListNode<T>;
-  delete(value: T): LinkedListNode<T> | null;
-  delete(node: LinkedListNode<T>): LinkedListNode<T> | null;
-  travel(): LinkedList<T>;
-  toArray(): T[];
-}
-
-// compare
 export default class LinkedList<T = any> implements LinkedListMethods<T> {
   head: LinkedListNode<T> | null = null;
 
@@ -20,93 +8,13 @@ export default class LinkedList<T = any> implements LinkedListMethods<T> {
     values.forEach((value) => this.append(value));
   }
 
-  get size() {
-    let current = this.head;
-    let count = 0;
-
-    while (current) {
-      count++;
-      current = current.next;
-    }
-
-    return count;
-  }
-
-  /**
-   * find node by value
-   * @param value find the value in the list
-   * @returns linked list node or null
-   */
-  find(value: T): LinkedListNode<T> | null {
-    let current = this.head;
-
-    while (current) {
-      if (current.value === value) {
-        return current;
-      }
-
-      current = current.next;
-    }
-
-    return null;
-  }
-
-  findByIndex(index: number): LinkedListNode<T> | null {
-    let current = this.head;
-
-    for (let i = 0; i < index; i++) {
-      if (current.next) {
-        current = current.next;
-      } else {
-        return null;
-      }
-    }
-
-    return current;
-  }
-
-  insert(value: T, index: number): LinkedListNode<T>;
-  insert(value: T, node: LinkedListNode<T>): LinkedListNode<T>;
-  insert(value: T, indexOrNode: LinkedListNode<T> | number): LinkedListNode<T> {
-    const node = new LinkedListNode(value);
-    let insertNode: LinkedListNode<T> | null =
-      indexOrNode instanceof LinkedListNode ? indexOrNode : null;
-    let index = indexOrNode instanceof LinkedListNode ? 0 : indexOrNode;
-    let current = this.head;
-
-    if (!this.head) {
-      this.head = node;
-    } else {
-      if (insertNode) {
-        while (current.value !== insertNode.value) {
-          current = current.next;
-        }
-      } else {
-        while (index--) {
-          current = current.next;
-        }
-      }
-
-      node.next = current.next;
-      current.next = node;
-    }
-
-    return node;
-  }
-
-  /**
-   * append a node to the end of the list
-   * @param value append value to the end of the list
-   * @returns linked list node
-   */
   append(value: T): LinkedListNode<T> {
-    const node = new LinkedListNode(value);
+    let current = this.head;
+    const node = new LinkedListNode<T>(value);
 
-    if (!this.head) {
+    if (!current) {
       this.head = node;
     } else {
-      let current = this.head;
-
       while (current.next) {
         current = current.next;
       }
@@ -117,81 +25,115 @@ export default class LinkedList<T = any> implements LinkedListMethods<T> {
     return node;
   }
 
-  /**
-   * linked list from array
-   * @returns value of the linked list
-   */
-  toArray(): T[] {
-    const result: T[] = [];
+  prepend(value: T): LinkedListNode<T> {
+    const node = new LinkedListNode<T>(value);
     let current = this.head;
 
-    while (current) {
-      result.push(current.value);
+    if (!current) {
+      this.head = node;
+    } else {
+      node.next = current;
+      this.head = node;
+    }
+
+    return node;
+  }
+
+  find(value: T): LinkedListNode<T> | undefined {
+    let current = this.head;
+
+    if (!current) {
+      return undefined;
+    }
+
+    while (current.next) {
+      if (current.value === value) {
+        return current;
+      }
+
       current = current.next;
     }
 
-    return result;
+    return undefined;
   }
 
-  /**
-   * travel the linked list
-   * @returns linked list
-   */
-  travel(): LinkedList<T> {
+  insert(value: T, index: number): LinkedListNode<T>;
+  insert(value: T, node: LinkedListNode<T>): LinkedListNode<T>;
+  insert(value: T, indexOrNode: number | LinkedListNode<T>): LinkedListNode<T> {
+    const node = new LinkedListNode<T>(value);
     let current = this.head;
+    const index = typeof indexOrNode === "number" ? indexOrNode : undefined;
+
+    if (!current) {
+      this.head = node;
+      return node;
+    }
+
+    if (index === 0) {
+      return this.prepend(value);
+    }
+
+    if (index) {
+      for (let i = 1; i < index; i++) {
+        if (!current.next) {
+          break;
+        }
+
+        current = current.next;
+      }
+    } else {
+      while (current.next) {
+        if (current === indexOrNode) {
+          break;
+        }
+
+        current = current.next;
+      }
+    }
+
+    node.next = current.next;
+    current.next = node;
+
+    return node;
+  }
+
+  delete(value: T): LinkedListNode<T> | undefined;
+  delete(node: LinkedListNode<T>): LinkedListNode<T> | undefined;
+  delete(valueOrNode: T | LinkedListNode<T>): LinkedListNode<T> | undefined {
+    throw new Error("Method not implemented.");
+  }
+
+  reverse(): LinkedList<T> {
+    let current = this.head;
+    let previous: LinkedListNode<T> | null = null;
     let next: LinkedListNode<T> | null = null;
-    let prev: LinkedListNode<T> | null = null;
 
     while (current) {
       next = current.next;
 
-      current.next = prev;
-      prev = current;
+      current.next = previous;
+      previous = current;
       current = next;
     }
 
-    this.head = prev;
+    this.head = previous;
 
     return this;
   }
 
-  /**
-   * delete node by index or node
-   * @param value value or linked list node
-   */
-  delete(value: T): LinkedListNode<T> | null;
-  delete(node: LinkedListNode<T>): LinkedListNode<T> | null;
-  delete(value: LinkedListNode<T> | T): LinkedListNode<T> | null {
-    if (!this.head) {
-      return null;
-    }
-
-    const compareMethod =
-      value instanceof LinkedListNode
-        ? (a: LinkedListNode<T>, b: LinkedListNode<T> | T) => a === b
-        : (a: LinkedListNode<T>, b: LinkedListNode<T> | T) => a.value === b;
-    let current: LinkedListNode<T> | null = this.head;
-    let prev: LinkedListNode<T> | null = null;
+  toArray(): T[] {
+    let current = this.head;
+    const data: T[] = [];
 
     while (current) {
-      if (compareMethod(current, value)) {
-        break;
-      }
-
-      prev = current;
+      data.push(current.value);
       current = current.next;
     }
 
-    if (!current) {
-      return null;
-    }
+    return data;
+  }
 
-    if (!prev) {
-      this.head = current.next;
-    }
-
-    prev.next = current.next ? current.next : null;
-
-    return current;
+  clear(): void {
+    this.head = null;
   }
 }

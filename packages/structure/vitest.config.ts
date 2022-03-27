@@ -6,5 +6,10 @@ export default defineConfig({
   },
   test: {
     globals: true,
+    coverage: {
+      lines: 95,
+      branches: 95,
+      functions: 95,
+    },
   },
 });

@@ -2,37 +2,65 @@ import LinkedList from "./LinkedList";
 
 describe("LinkedList", () => {
   it("created", () => {
-    const linkedList = new LinkedList<number>([1, 2, 3]);
+    const linked = new LinkedList([1, 2, 3]);
 
-    expect(linkedList.size).toBe(3);
+    expect(linked.toArray()).toEqual([1, 2, 3]);
   });
 
-  it("get the size", () => {
-    const linkedList = new LinkedList();
+  it("use clear", () => {
+    const linked = new LinkedList([1, 2, 3]);
 
-    expect(linkedList.size).toBe(0);
+    linked.clear();
 
-    linkedList.append(1);
-    expect(linkedList.size).toBe(1);
+    expect(linked.toArray()).toEqual([]);
   });
 
-  it("use find", () => {
-    const linkedList = new LinkedList([1, 2, 3, 4, 5]);
+  it("use toArray", () => {
+    const linked = new LinkedList([1, 2, 3]);
 
-    expect(linkedList.find(3)).toBeTruthy();
-
-    expect(linkedList.find(6)).toBeFalsy();
+    expect(linked.toArray()).toEqual([1, 2, 3]);
   });
 
-  it("use to array", () => {
-    const linkedList = new LinkedList([1, 2, 3]);
+  it("use reverse", () => {
+    const linked = new LinkedList([1, 2, 3]);
 
-    expect(linkedList.toArray()).toEqual([1, 2, 3]);
+    expect(linked.reverse().toArray()).toEqual([3, 2, 1]);
   });
 
-  it("use travel", () => {
-    const linkedList = new LinkedList([1, 2, 3]);
+  it("use append", () => {
+    const linked = new LinkedList([1]);
 
-    expect(linkedList.travel().toArray()).toEqual([3, 2, 1]);
+    expect(linked.toArray()).toEqual([1]);
+
+    linked.append(2);
+    expect(linked.toArray()).toEqual([1, 2]);
+  });
+
+  it("use prepend", () => {
+    const linked = new LinkedList<number>([]);
+
+    expect(linked.toArray()).toEqual([]);
+
+    linked.prepend(1);
+    expect(linked.toArray()).toEqual([1]);
+
+    linked.append(2);
+    linked.append(3);
+    linked.prepend(4);
+    expect(linked.toArray()).toEqual([4, 1, 2, 3]);
+  });
+
+  it("use insert", () => {
+    const linked = new LinkedList<number>([]);
+
+    linked.insert(4, 1);
+    expect(linked.toArray()).toEqual([1, 4, 2, 3]);
+
+    linked.insert(5, 2);
+    expect(linked.toArray()).toEqual([1, 4, 5, 2, 3]);
+
+    const node = linked.find(5);
+    linked.insert(6, node!);
+    expect(linked.toArray()).toEqual([1, 4, 5, 6, 2, 3]);
   });
 });
