@@ -46,8 +46,8 @@ export default class LinkedList<T = any> implements LinkedListMethods<T> {
       return undefined;
     }
 
-    while (current.next) {
-      if (current.value === value) {
+    while (current) {
+      if (current && current.value === value) {
         return current;
       }
 
