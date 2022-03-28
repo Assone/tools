@@ -51,7 +51,14 @@ describe("LinkedList", () => {
   });
 
   it("use insert", () => {
-    const linked = new LinkedList<number>([]);
+    const linked = new LinkedList<number>();
+
+    expect(linked.toArray()).toEqual([]);
+    linked.insert(1, 2);
+    expect(linked.toArray()).toEqual([1]);
+
+    linked.append(2);
+    linked.append(3);
 
     linked.insert(4, 1);
     expect(linked.toArray()).toEqual([1, 4, 2, 3]);
@@ -62,5 +69,22 @@ describe("LinkedList", () => {
     const node = linked.find(5);
     linked.insert(6, node!);
     expect(linked.toArray()).toEqual([1, 4, 5, 6, 2, 3]);
+
+    linked.insert(7, 0);
+    expect(linked.toArray()).toEqual([7, 1, 4, 5, 6, 2, 3]);
+
+    linked.insert(8, 11);
+    expect(linked.toArray()).toEqual([7, 1, 4, 5, 6, 2, 3, 8]);
+  });
+
+  it("use find", () => {
+    const linked = new LinkedList<number>();
+
+    expect(linked.find(1)).toBeUndefined();
+
+    linked.append(1);
+    console.log(linked.find(1));
+    expect(linked.find(1)?.value).toBe(1);
+    expect(linked.find(4)).toBeUndefined();
   });
 });
